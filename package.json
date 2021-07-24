@@ -1,0 +1,28 @@
+{
+  "name": "electronapp",
+  "version": "1.0.0",
+  "description": "ElectronJs Application",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fantasticDev2/ElectronJS_App.git"
+  },
+  "keywords": [
+    "electronjs"
+  ],
+  "author": "steadydevelop@gmail.com",
+  "license": "ISC",
+  "dependencies": {
+    "app-root-path": "^3.0.0",
+    "dns": "^0.2.2",
+    "electron-debug": "^3.1.0",
+    "electron-is-dev": "^1.2.0",
+    "electron-online": "^1.0.0",
+    "electron-splashscreen": "^1.0.0",
+    "jquery": "^3.5.1",
+    "npm-install-offline": "^1.2.1"
+  }
+}

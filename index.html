@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <base href="./">
+    <title>Main Window</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        html {
+            height: 100%;
+            width: 100%;
+        }
+        body {
+            height: 100vh;
+            width: 100vw;
+            margin: 0px;
+            padding: 0px;
+        }
+        #web-container {
+            height: 100%;
+            width: 100%;
+            border: none;
+        }
+        .offline-mark {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            /*background-color: #333;*/
+        }
+    </style>
+</head>
+<body>
+    <webview src="https://app.ads2grid.com/play/" id="web-container"
+        autosize="on" minwidth="800px" minheight="1200px" disablewebsecurity>
+    </webview>
+    <div class="offline-mark">
+        <img src="assets/nointernet_icon.png">
+    </div>
+    <script src="./renderer.js"></script>
+    <script type = "text/javascript">
+        const dns = require('dns');
+        const $ = require('jquery');
+        const { ipcRenderer } = require('electron');
+        let isConnected = true;
+        let loaded = false;
+
+        console.log('Main Page Load Here');
+
+        $('.offline-mark').hide();
+        const webview = document.getElementById('web-container')
+        webview.addEventListener('beforeunload', (ev) => {
+              ev.returnValue = true;
+            });
+
+        webview.addEventListener('did-finish-load', () => {
+          console.log('dom ready');
+          loaded = true;
+          ipcRenderer.send('main-dom-ready', '');
+        })
+
+        webview.addEventListener('destroyed', () => {
+          console.log('Destroyed')
+        })
+
+
+        let timer = setInterval(function () {
+            dns.lookup("www.github.com", function (err, addr) {
+                if (err) {
+                    $('.offline-mark').show();
+                    isConnected = false;
+                    console.log(isConnected);
+                }
+                else {
+                    $('.offline-mark').hide();
+                    if(!isConnected){
+                        console.log(isConnected);
+                        isConnected = true;
+                        if(!loaded){
+                            ipcRenderer.send('request-mainprocess-action', '');
+                        }
+                    }
+                }
+            });
+        }, 1000);
+    </script>
+</body>
+</html>
